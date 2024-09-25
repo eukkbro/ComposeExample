@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import abled.semina.composeexample.ui.theme.ComposeExampleTheme
 import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.unit.dp
 
 class MainActivity : ComponentActivity() {
@@ -20,12 +21,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             ComposeExampleTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting("Harry")
-                }
+               MyApp(modifier = Modifier.fillMaxSize())
             }
         }
     }
@@ -43,11 +39,21 @@ Surface(color = MaterialTheme.colorScheme.primary){
 }
 }
 
+@Composable
+fun MyApp(modifier: Modifier = Modifier){
+    Surface(
+        modifier = modifier,
+        color = MaterialTheme.colorScheme.background
+    ){
+        Greeting("Hello")
+    }
+}
+
 //미리보기
 @Preview(showBackground = true, name = "Text preview")
 @Composable
 fun GreetingPreview() {
     ComposeExampleTheme {
-        Greeting("Harry")
+        MyApp()
     }
 }
