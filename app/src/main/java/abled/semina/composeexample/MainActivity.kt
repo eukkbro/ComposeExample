@@ -11,6 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import abled.semina.composeexample.ui.theme.ComposeExampleTheme
+import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.unit.dp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,10 +35,12 @@ class MainActivity : ComponentActivity() {
 // 함수가 내부에서 다른 @Composable을 호출할 수 있다.
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
+Surface(color = MaterialTheme.colorScheme.primary){
     Text(
         text = "Hello $name!",
-        modifier = modifier
+        modifier = modifier.padding(24.dp)
     )
+}
 }
 
 //미리보기
