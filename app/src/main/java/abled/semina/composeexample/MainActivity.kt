@@ -22,13 +22,15 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    Greeting("Harry")
                 }
             }
         }
     }
 }
 
+// 구성 가능한 함수
+// 함수가 내부에서 다른 @Composable을 호출할 수 있다.
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
@@ -37,10 +39,11 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     )
 }
 
-@Preview(showBackground = true)
+//미리보기
+@Preview(showBackground = true, name = "Text preview")
 @Composable
 fun GreetingPreview() {
     ComposeExampleTheme {
-        Greeting("Android")
+        Greeting("Harry")
     }
 }
