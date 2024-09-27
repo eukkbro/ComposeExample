@@ -16,8 +16,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ElevatedButton
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.unit.dp
+import kotlin.math.exp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +39,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
 
-    var expanded = false
+    val expanded = remember{mutableStateOf(false)}
 
 Surface(color = MaterialTheme.colorScheme.primary,
 modifier = modifier.padding(vertical = 4.dp, horizontal = 8.dp)){
@@ -46,9 +49,9 @@ modifier = modifier.padding(vertical = 4.dp, horizontal = 8.dp)){
             Text(text = name)
         }
         ElevatedButton(
-            onClick = { expanded = !expanded }
+            onClick = { expanded.value = !expanded.value }
         ){
-            Text("Show more")
+            Text(if(expanded.value) "Show more" else "Show less")
         }
     }
 
