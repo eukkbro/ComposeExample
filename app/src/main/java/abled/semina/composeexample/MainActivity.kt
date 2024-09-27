@@ -34,7 +34,10 @@ class MainActivity : ComponentActivity() {
 // 구성 가능한 함수
 // 함수가 내부에서 다른 @Composable을 호출할 수 있다.
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
+fun Greeting(name: String, modifier: Modifier = Modifier) {\
+
+    var expanded = false
+    
 Surface(color = MaterialTheme.colorScheme.primary,
 modifier = modifier.padding(vertical = 4.dp, horizontal = 8.dp)){
     Row(modifier = Modifier.padding(24.dp)){
@@ -43,7 +46,7 @@ modifier = modifier.padding(vertical = 4.dp, horizontal = 8.dp)){
             Text(text = name)
         }
         ElevatedButton(
-            onClick = { }
+            onClick = { expanded = !expanded }
         ){
             Text("Show more")
         }
