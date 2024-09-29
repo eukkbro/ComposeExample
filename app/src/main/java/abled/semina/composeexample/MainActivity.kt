@@ -47,6 +47,8 @@ fun MyApp(modifier: Modifier = Modifier){
     Surface(modifier) {
         if(shouldShowOnBoarding){
             OnboardingScreen(onContinueClicked = {shouldShowOnBoarding = false})
+        }else{
+            Greetings()
         }
     }
 }
