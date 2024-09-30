@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import abled.semina.composeexample.ui.theme.ComposeExampleTheme
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -86,7 +87,9 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     // 스크롤하거나 기기를 회전한 다음 펼쳐진 항목으로 돌아가면 초기 상태로 돌아감
     // remember -> rememberSaveable 로 상태를 유지할 수 있음
     var expanded by rememberSaveable { mutableStateOf(false) }
-    val extraPadding = if (expanded) 48.dp else 0.dp
+
+    val extraPadding by animateDpAsState(if (expanded) 48.dp else 0.dp)
+
     Surface(
         color = MaterialTheme.colorScheme.primary,
         modifier = modifier.padding(vertical = 4.dp, horizontal = 8.dp)
