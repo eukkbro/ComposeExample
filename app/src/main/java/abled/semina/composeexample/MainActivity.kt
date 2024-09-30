@@ -11,7 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import abled.semina.composeexample.ui.theme.ComposeExampleTheme
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.repeatable
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -88,7 +92,13 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     // remember -> rememberSaveable 로 상태를 유지할 수 있음
     var expanded by rememberSaveable { mutableStateOf(false) }
 
-    val extraPadding by animateDpAsState(if (expanded) 48.dp else 0.dp)
+    val extraPadding by animateDpAsState(
+        if (expanded) 48.dp else 0.dp,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioHighBouncy,
+            stiffness = Spring.StiffnessHigh
+        )
+        )
 
     Surface(
         color = MaterialTheme.colorScheme.primary,
@@ -98,7 +108,10 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(bottom = extraPadding)
+
+                    //패딩이 음수가 되면안됨.
+                    .padding(bottom = extraPadding.coerceAtLeast(0.dp))
+
             ) {
                 Text(text = "Hello ")
                 Text(text = name)
