@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import abled.semina.composeexample.ui.theme.ComposeExampleTheme
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.repeatable
@@ -145,6 +146,12 @@ private fun Greetings(
 
 
 //미리보기
+@Preview(
+    showBackground = true,
+    widthDp = 320,
+    uiMode = UI_MODE_NIGHT_YES,
+    name = "GreetingPreviewDark"
+)
 @Preview(showBackground = true, widthDp = 320)
 @Composable
 fun GreetingPreview() {
