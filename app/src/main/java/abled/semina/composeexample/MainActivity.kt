@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.TextFieldDefaults
@@ -28,28 +29,21 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ComposeExampleTheme {
-                MyApp(modifier =  Modifier.fillMaxSize())
+               SearchBar()
             }
         }
     }
 }
 
 
-@Composable
-fun MyApp(modifier: Modifier = Modifier){
 
-    Surface(modifier, color = MaterialTheme.colorScheme.background) {
-
-    }
-}
-
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(
     modifier: Modifier = Modifier
 ) {
     TextField(
-        value = "",
+        value = " ",
         onValueChange = {},
         leadingIcon = {
             Icon(
@@ -58,9 +52,8 @@ fun SearchBar(
             )
         },
         colors = TextFieldDefaults.textFieldColors(
-            containerColor = MaterialTheme.colorScheme.surface, // 컨테이너 색상 설정
-            focusedIndicatorColor = Color.Transparent,           // 포커스 시 하단 선 색상 없앰
-            unfocusedIndicatorColor = Color.Transparent          // 포커스되지 않았을 때 하단 선 색상 없앰
+            focusedIndicatorColor = Color.Transparent,  // 포커스된 상태에서 밑줄을 투명하게 설정
+            unfocusedIndicatorColor = Color.Transparent // 포커스되지 않은 상태에서도 밑줄을 투명하게 설정
         ),
         placeholder = {
             Text(stringResource(R.string.placeholder_search))
@@ -71,6 +64,14 @@ fun SearchBar(
     )
 }
 
+
+@Preview(showBackground = true)
+@Composable
+fun SearchBarPreview() {
+    ComposeExampleTheme {
+        SearchBar()
+    }
+}
 
 
 
