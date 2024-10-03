@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">ComposeExample</string>
     <string name="placeholder_search">Search</string>
+    <string name="ab1_inversion">Inversion</string>
 </resources>
