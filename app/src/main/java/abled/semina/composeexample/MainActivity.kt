@@ -129,6 +129,8 @@ fun AlignYourBodyElementPreview() {
 
 @Composable
 fun FavoriteCollectionCard(
+    @DrawableRes drawable: Int,
+    @StringRes text: Int,
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -140,12 +142,14 @@ fun FavoriteCollectionCard(
             modifier = Modifier.width(255.dp)
         ) {
             Image(
-                painter = painterResource(R.drawable.fc2_nature_meditations),
+                painter = painterResource(drawable),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.size(80.dp)
             )
-            Text(text = stringResource(R.string.fc2_nature_meditation))
+            Text(text = stringResource(text),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(horizontal = 16.dp))
         }
     }
 }
@@ -155,6 +159,8 @@ fun FavoriteCollectionCard(
 fun FavoriteCollectionCardPreview() {
     ComposeExampleTheme {
         FavoriteCollectionCard(
+            drawable = R.drawable.fc2_nature_meditations,
+            text = R.string.fc2_nature_meditation,
             modifier = Modifier.padding(8.dp)
         )
     }
