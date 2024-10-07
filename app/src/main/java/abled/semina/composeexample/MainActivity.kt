@@ -15,6 +15,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -119,6 +120,37 @@ fun AlignYourBodyElementPreview() {
         AlignYourBodyElement(
             text = R.string.ab1_inversion,
             drawable = R.drawable.ab1_inversions,
+            modifier = Modifier.padding(8.dp)
+        )
+    }
+}
+
+
+@Composable
+fun FavoriteCollectionCard(
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        shape = MaterialTheme.shapes.medium,
+        modifier = modifier
+    ) {
+        Row {
+            Image(
+                painter = painterResource(R.drawable.fc2_nature_meditations),
+                contentDescription = null
+            )
+            Text(text = stringResource(R.string.fc2_nature_meditation))
+        }
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFFF5F0EE)
+@Composable
+fun FavoriteCollectionCardPreview() {
+    ComposeExampleTheme {
+        FavoriteCollectionCard(
+            text = R.string.fc2_nature_meditation,
+            drawable = R.drawable.fc2_nature_meditations,
             modifier = Modifier.padding(8.dp)
         )
     }
