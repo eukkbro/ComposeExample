@@ -14,6 +14,7 @@ import abled.semina.composeexample.ui.theme.ComposeExampleTheme
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,6 +23,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -166,6 +168,22 @@ fun FavoriteCollectionCardPreview() {
     }
 }
 
+data class BodyData(val drawable: Int, val text: Int)
+
+@Composable
+fun AlignYourBodyRow(
+    modifier: Modifier = Modifier
+) {
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier
+    ) {
+        //item 리스트 형태로 넣어야 되는데 공부좀 해야될듯.
+        items() { item ->
+            AlignYourBodyElement(R.drawable.ab1_inversions,R.string.ab1_inversion)
+        }
+    }
+}
 
 
 
