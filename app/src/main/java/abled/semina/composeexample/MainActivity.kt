@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.paddingFromBaseline
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -183,6 +184,12 @@ fun AlignYourBodyRow(
         //item 리스트 형태로 넣어야 되는데 공부좀 해야될듯.
         val alignYourBodyData = listOf(
             AlignYourBodyItem(R.drawable.ab1_inversions, R.string.ab1_inversion),
+            AlignYourBodyItem(R.drawable.ab1_inversions, R.string.ab1_inversion),
+            AlignYourBodyItem(R.drawable.ab1_inversions, R.string.ab1_inversion),
+            AlignYourBodyItem(R.drawable.ab1_inversions, R.string.ab1_inversion),
+            AlignYourBodyItem(R.drawable.ab1_inversions, R.string.ab1_inversion),
+            AlignYourBodyItem(R.drawable.ab1_inversions, R.string.ab1_inversion),
+            AlignYourBodyItem(R.drawable.ab1_inversions, R.string.ab1_inversion),
             AlignYourBodyItem(R.drawable.ab1_inversions, R.string.ab1_inversion)
         )
 
@@ -192,6 +199,14 @@ fun AlignYourBodyRow(
     }
 }
 
+
+@Preview(showBackground = true, backgroundColor = 0xFFF5F0EE)
+@Composable
+fun AlignYourBodyRowPreview() {
+    ComposeExampleTheme {
+        AlignYourBodyRow()
+    }
+}
 
 
 
