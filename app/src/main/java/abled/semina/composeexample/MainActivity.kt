@@ -168,7 +168,8 @@ fun FavoriteCollectionCardPreview() {
     }
 }
 
-data class BodyData(val drawable: Int, val text: Int)
+
+data class AlignYourBodyItem(val drawable: Int, val text: Int)
 
 @Composable
 fun AlignYourBodyRow(
@@ -178,12 +179,19 @@ fun AlignYourBodyRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
     ) {
+
         //item 리스트 형태로 넣어야 되는데 공부좀 해야될듯.
-        items() { item ->
-            AlignYourBodyElement(R.drawable.ab1_inversions,R.string.ab1_inversion)
+        val alignYourBodyData = listOf(
+            AlignYourBodyItem(R.drawable.ab1_inversions, R.string.ab1_inversion),
+            AlignYourBodyItem(R.drawable.ab1_inversions, R.string.ab1_inversion)
+        )
+
+        items(alignYourBodyData) { item ->
+            AlignYourBodyElement(item.drawable, item.text)
         }
     }
 }
+
 
 
 
