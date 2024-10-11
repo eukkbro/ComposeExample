@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package abled.semina.composeexample
 
 import android.os.Bundle
@@ -43,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
@@ -67,7 +70,6 @@ class MainActivity : ComponentActivity() {
 
 
 // 검색창
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(
     modifier: Modifier = Modifier
@@ -353,7 +355,25 @@ fun SootheBottomNavigationPreview(){
     }
 }
 
+@Composable
+fun MySootheAppPortrait() {
+    ComposeExampleTheme {
+        Scaffold(
+            bottomBar = { SootheBottomNavigation() }
+        ) { padding ->
+            HomeScreen(Modifier.padding(padding))
+        }
+    }
+}
 
+
+@Preview(showBackground = true, backgroundColor = 0xFFF5F0EE)
+@Composable
+fun MySootheAppPortraitPreview(){
+    ComposeExampleTheme {
+        MySootheAppPortrait()
+    }
+}
 
 
 
