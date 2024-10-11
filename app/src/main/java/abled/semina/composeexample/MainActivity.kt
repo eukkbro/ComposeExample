@@ -35,10 +35,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Spa
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
@@ -279,6 +283,7 @@ fun HomeSectionPreview() {
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier){
+
     Column(modifier.verticalScroll(rememberScrollState())) {
         Spacer(modifier = Modifier.height(16.dp))
         SearchBar(Modifier.padding(horizontal = 16.dp))
@@ -290,6 +295,7 @@ fun HomeScreen(modifier: Modifier = Modifier){
         }
         Spacer(modifier = Modifier.height(16.dp))
     }
+
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFFF5F0EE)
@@ -297,6 +303,53 @@ fun HomeScreen(modifier: Modifier = Modifier){
 fun HomeScreenPreview(){
     ComposeExampleTheme {
         HomeScreen()
+    }
+}
+
+@Composable
+private fun SootheBottomNavigation(modifier: Modifier = Modifier){
+    NavigationBar(
+        modifier = modifier
+    ) {
+        NavigationBarItem(
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Spa,
+                    contentDescription = null
+                )
+            },
+            label = {
+                Text(
+                    text = stringResource(R.string.bottom_navigation_home)
+                )
+            },
+            selected = true,
+            onClick = {}
+            )
+        NavigationBarItem(
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.AccountCircle,
+                    contentDescription = null
+                )
+            },
+            label = {
+                Text(
+                    text = stringResource(R.string.bottom_navigation_profile)
+                )
+            },
+            selected = false,
+            onClick = {}
+        )
+    }
+}
+
+
+@Preview(showBackground = true, backgroundColor = 0xFFF5F0EE)
+@Composable
+fun SootheBottomNavigationPreview(){
+    ComposeExampleTheme {
+        SootheBottomNavigation()
     }
 }
 
