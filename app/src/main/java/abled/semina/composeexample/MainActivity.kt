@@ -47,6 +47,10 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -313,6 +317,10 @@ private fun SootheBottomNavigation(modifier: Modifier = Modifier){
     NavigationBar(
         modifier = modifier
     ) {
+        //선택된 아이템의 인덱스를 상태로 관리
+        var selectedIndex by remember { mutableStateOf(0) }
+
+
         NavigationBarItem(
             icon = {
                 Icon(
@@ -325,8 +333,10 @@ private fun SootheBottomNavigation(modifier: Modifier = Modifier){
                     text = stringResource(R.string.bottom_navigation_home)
                 )
             },
-            selected = true,
-            onClick = {}
+            selected = selectedIndex == 0,
+            onClick = {
+                selectedIndex = 0
+            }
             )
         NavigationBarItem(
             icon = {
@@ -340,8 +350,10 @@ private fun SootheBottomNavigation(modifier: Modifier = Modifier){
                     text = stringResource(R.string.bottom_navigation_profile)
                 )
             },
-            selected = false,
-            onClick = {}
+            selected = selectedIndex == 1,
+            onClick = {
+                selectedIndex = 1
+            }
         )
     }
 }
