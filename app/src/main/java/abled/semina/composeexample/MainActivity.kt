@@ -16,7 +16,10 @@ import abled.semina.composeexample.ui.theme.ComposeExampleTheme
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -62,6 +65,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.tooling.preview.Preview
+import java.time.LocalDate
+import java.time.YearMonth
 
 
 class MainActivity : ComponentActivity() {
@@ -69,389 +74,53 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ComposeExampleTheme {
-               SearchBar()
+
             }
         }
     }
 }
 
 
-// 검색창
+//날짜 칸
 @Composable
-fun SearchBar(
-    modifier: Modifier = Modifier
+fun DayCell(
+    date: LocalDate,
+    isSelected: Boolean,
+    isToday: Boolean,
+    onClick: () -> Unit
 ) {
-    TextField(
-        value = " ",
-        onValueChange = {},
-        leadingIcon = {
-            Icon(
-                imageVector = Icons.Default.Search,
-                contentDescription = null
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .size(40.dp)
+            .background(
+                color = when {
+                    isSelected -> Color.Blue
+                    isToday -> Color.LightGray
+                    else -> Color.Transparent
+                },
+                shape = CircleShape
             )
-        },
-        colors = TextFieldDefaults.textFieldColors(
-            focusedIndicatorColor = Color.Transparent,  // 포커스된 상태에서 밑줄을 투명하게 설정
-            unfocusedIndicatorColor = Color.Transparent // 포커스되지 않은 상태에서도 밑줄을 투명하게 설정
-        ),
-        placeholder = {
-            Text(stringResource(R.string.placeholder_search))
-        },
-        modifier = modifier
-            .fillMaxWidth()
-            .heightIn(min = 56.dp)
-    )
+            .clickable { onClick() }
+    ) {
+        Text(
+            text = "${date.dayOfMonth}",
+            color = if (isSelected) Color.White else Color.Black
+        )
+    }
 }
 
 
+//미리보기
 @Preview(showBackground = true)
 @Composable
-fun SearchBarPreview() {
+fun DayCellPreview() {
     ComposeExampleTheme {
-        SearchBar()
-    }
-}
-
-@Composable
-fun AlignYourBodyElement(
-    @DrawableRes drawable: Int,
-    @StringRes text: Int,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Image(
-            painter = painterResource(drawable),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(88.dp)
-                .clip(CircleShape)
-        )
-        Text(
-            text = stringResource(text),
-            modifier = Modifier.paddingFromBaseline(top = 24.dp, bottom = 8.dp),
-            style = MaterialTheme.typography.bodyMedium
+        DayCell(
+            date = LocalDate.now(),  // 미리보기 날짜
+            isSelected = false,      // 선택 여부
+            isToday = true,          // 오늘 여부
+            onClick = {}             // 빈 클릭 이벤트
         )
     }
 }
-
-@Preview(showBackground = true, backgroundColor = 0xFFF5F0EE)
-@Composable
-fun AlignYourBodyElementPreview() {
-    ComposeExampleTheme {
-        AlignYourBodyElement(
-            text = R.string.ab1_inversion,
-            drawable = R.drawable.ab1_inversions,
-            modifier = Modifier.padding(8.dp)
-        )
-    }
-}
-
-
-@Composable
-fun FavoriteCollectionCard(
-    @DrawableRes drawable: Int,
-    @StringRes text: Int,
-    modifier: Modifier = Modifier
-) {
-    Surface(
-        shape = MaterialTheme.shapes.medium,
-        modifier = modifier
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.width(255.dp)
-        ) {
-            Image(
-                painter = painterResource(drawable),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.size(80.dp)
-            )
-            Text(text = stringResource(text),
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(horizontal = 16.dp))
-        }
-    }
-}
-
-@Preview(showBackground = true, backgroundColor = 0xFFF5F0EE)
-@Composable
-fun FavoriteCollectionCardPreview() {
-    ComposeExampleTheme {
-        FavoriteCollectionCard(
-            drawable = R.drawable.fc2_nature_meditations,
-            text = R.string.fc2_nature_meditation,
-            modifier = Modifier.padding(8.dp)
-        )
-    }
-}
-
-
-data class AlignYourBodyItem(val drawable: Int, val text: Int)
-
-@Composable
-fun AlignYourBodyRow(
-    modifier: Modifier = Modifier
-) {
-    LazyRow(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier
-    ) {
-
-        //item 리스트 형태로 넣어야 되는데 공부좀 해야될듯.
-        val alignYourBodyData = listOf(
-            AlignYourBodyItem(R.drawable.ab1_inversions, R.string.ab1_inversion),
-            AlignYourBodyItem(R.drawable.ab1_inversions, R.string.ab1_inversion),
-            AlignYourBodyItem(R.drawable.ab1_inversions, R.string.ab1_inversion),
-            AlignYourBodyItem(R.drawable.ab1_inversions, R.string.ab1_inversion),
-            AlignYourBodyItem(R.drawable.ab1_inversions, R.string.ab1_inversion),
-            AlignYourBodyItem(R.drawable.ab1_inversions, R.string.ab1_inversion),
-            AlignYourBodyItem(R.drawable.ab1_inversions, R.string.ab1_inversion),
-            AlignYourBodyItem(R.drawable.ab1_inversions, R.string.ab1_inversion)
-        )
-
-        items(alignYourBodyData) { item ->
-            AlignYourBodyElement(item.drawable, item.text)
-        }
-    }
-}
-
-
-@Preview(showBackground = true, backgroundColor = 0xFFF5F0EE)
-@Composable
-fun AlignYourBodyRowPreview() {
-    ComposeExampleTheme {
-        AlignYourBodyRow()
-    }
-}
-
-@Composable
-fun FavoriteCollectionsGrid(
-    modifier: Modifier = Modifier
-){
-    LazyHorizontalGrid(
-        rows = GridCells.Fixed(2),
-        contentPadding = PaddingValues(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = modifier.height(168.dp)
-    ){
-        val favoriteCollectionsData = listOf(
-            AlignYourBodyItem(R.drawable.fc2_nature_meditations, R.string.fc2_nature_meditation),
-            AlignYourBodyItem(R.drawable.fc2_nature_meditations, R.string.fc2_nature_meditation),
-            AlignYourBodyItem(R.drawable.fc2_nature_meditations, R.string.fc2_nature_meditation),
-            AlignYourBodyItem(R.drawable.fc2_nature_meditations, R.string.fc2_nature_meditation),
-            AlignYourBodyItem(R.drawable.fc2_nature_meditations, R.string.fc2_nature_meditation),
-            AlignYourBodyItem(R.drawable.fc2_nature_meditations, R.string.fc2_nature_meditation),
-            AlignYourBodyItem(R.drawable.fc2_nature_meditations, R.string.fc2_nature_meditation),
-            AlignYourBodyItem(R.drawable.fc2_nature_meditations, R.string.fc2_nature_meditation),
-        )
-        items(favoriteCollectionsData){ item ->
-            FavoriteCollectionCard(drawable = item.drawable, text = item.text, Modifier.height(80.dp))
-        }
-    }
-}
-
-
-@Preview(showBackground = true, backgroundColor = 0xFFF5F0EE)
-@Composable
-fun FavoriteCollectionsGridPreview() {
-    ComposeExampleTheme {
-        FavoriteCollectionsGrid()
-    }
-}
-
-
-@Composable
-fun HomeSection(
-    @StringRes title: Int,
-    modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
-) {
-    Column(modifier) {
-        Text(
-            text = stringResource(title)
-        )
-        content()
-    }
-}
-
-@Preview(showBackground = true, backgroundColor = 0xFFF5F0EE)
-@Composable
-fun HomeSectionPreview() {
-    ComposeExampleTheme {
-        HomeSection(R.string.align_your_body) {
-            AlignYourBodyRow()
-        }
-    }
-}
-
-@Composable
-fun HomeScreen(modifier: Modifier = Modifier){
-
-    Column(modifier.verticalScroll(rememberScrollState())) {
-        Spacer(modifier = Modifier.height(16.dp))
-        SearchBar(Modifier.padding(horizontal = 16.dp))
-        HomeSection(title = R.string.align_your_body) {
-            AlignYourBodyRow()
-        }
-        HomeSection(title = R.string.favorite_collections) {
-            FavoriteCollectionsGrid()
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-    }
-
-}
-
-@Preview(showBackground = true, backgroundColor = 0xFFF5F0EE)
-@Composable
-fun HomeScreenPreview(){
-    ComposeExampleTheme {
-        HomeScreen()
-    }
-}
-
-@Composable
-private fun SootheBottomNavigation(modifier: Modifier = Modifier){
-    NavigationBar(
-        modifier = modifier
-    ) {
-        //선택된 아이템의 인덱스를 상태로 관리
-        var selectedIndex by remember { mutableStateOf(0) }
-
-
-        NavigationBarItem(
-            icon = {
-                Icon(
-                    imageVector = Icons.Default.Spa,
-                    contentDescription = null
-                )
-            },
-            label = {
-                Text(
-                    text = stringResource(R.string.bottom_navigation_home)
-                )
-            },
-            selected = selectedIndex == 0,
-            onClick = {
-                selectedIndex = 0
-            }
-            )
-        NavigationBarItem(
-            icon = {
-                Icon(
-                    imageVector = Icons.Default.AccountCircle,
-                    contentDescription = null
-                )
-            },
-            label = {
-                Text(
-                    text = stringResource(R.string.bottom_navigation_profile)
-                )
-            },
-            selected = selectedIndex == 1,
-            onClick = {
-                selectedIndex = 1
-            }
-        )
-    }
-}
-
-
-@Preview(showBackground = true, backgroundColor = 0xFFF5F0EE)
-@Composable
-fun SootheBottomNavigationPreview(){
-    ComposeExampleTheme {
-        SootheBottomNavigation()
-    }
-}
-
-@Composable
-fun MySootheAppPortrait() {
-    ComposeExampleTheme {
-        Scaffold(
-            bottomBar = { SootheBottomNavigation() }
-        ) { padding ->
-            HomeScreen(Modifier.padding(padding))
-        }
-    }
-}
-
-
-@Preview(showBackground = true, backgroundColor = 0xFFF5F0EE)
-@Composable
-fun MySootheAppPortraitPreview(){
-    ComposeExampleTheme {
-        MySootheAppPortrait()
-    }
-}
-
-
-@Composable
-private fun SootheNavigationRail(modifier: Modifier = Modifier) {
-    NavigationRail(
-        modifier = modifier.padding(start = 8.dp, end = 8.dp),
-        containerColor = MaterialTheme.colorScheme.background,
-    ) {
-        Column(
-            modifier = modifier.fillMaxHeight(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            NavigationRailItem(
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.Spa,
-                        contentDescription = null
-                    )
-                },
-                label = {
-                    Text(stringResource(R.string.bottom_navigation_home))
-                },
-                selected = true,
-                onClick = {}
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            NavigationRailItem(
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.AccountCircle,
-                        contentDescription = null
-                    )
-                },
-                label = {
-                    Text(stringResource(R.string.bottom_navigation_profile))
-                },
-                selected = false,
-                onClick = {}
-            )
-        }
-    }
-}
-
-@Composable
-fun MySootheAppLandscape() {
-    ComposeExampleTheme {
-        Surface(color = MaterialTheme.colorScheme.background) {
-            Row {
-                SootheNavigationRail()
-                HomeScreen()
-            }
-        }
-    }
-}
-
-
-@Preview(showBackground = true, backgroundColor = 0xFFF5F0EE)
-@Composable
-fun MySootheAppLandscapePreview(){
-    ComposeExampleTheme {
-        MySootheAppLandscape()
-    }
-}
-
-
