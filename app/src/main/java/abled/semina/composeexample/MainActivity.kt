@@ -67,6 +67,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -83,12 +84,77 @@ class MainActivity : ComponentActivity() {
 }
 
 
-//날짜 칸
+@Composable
+fun Calendar() {
+    val currentMonth = YearMonth.now()
+    val currentDate = LocalDate.now()
+    var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
+
+    Column(modifier = Modifier.padding(16.dp)) {
+        Text(
+            text = "${currentMonth.year}년 ${currentMonth.monthValue}월",
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+
+        // 요일 헤더
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+            listOf("일", "월", "화", "수", "목", "금", "토").forEachIndexed { index, day ->
+                val color = when (index) {
+                    0 -> Color.Red    // 일요일
+                    6 -> Color.Blue   // 토요일
+                    else -> Color.Black
+                }
+                Text(
+                    text = day,
+                    textAlign = TextAlign.Center,
+                    color = color,
+                    modifier = Modifier.weight(1f)
+                )
+            }
+        }
+
+        // 날짜 셀
+        val firstDayOfMonth = currentMonth.atDay(1)
+        val daysInMonth = currentMonth.lengthOfMonth()
+        val startOffset = firstDayOfMonth.dayOfWeek.value % 7
+
+        LazyColumn {
+            items((0 until (daysInMonth + startOffset)).chunked(7)) { week ->
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+                    week.forEach { index ->
+                        val day = index - startOffset + 1
+                        if (day in 1..daysInMonth) {
+                            val date = currentMonth.atDay(day)
+                            val dayOfWeek = date.dayOfWeek
+
+                            DayCell(
+                                date = date,
+                                isSelected = date == selectedDate,
+                                isToday = date == currentDate,
+                                onClick = { selectedDate = date },
+                                dayColor = when (dayOfWeek) {
+                                    DayOfWeek.SUNDAY -> Color.Red
+                                    DayOfWeek.SATURDAY -> Color.Blue
+                                    else -> Color.Black
+                                }
+                            )
+                        } else {
+                            Spacer(modifier = Modifier.weight(1f))
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 @Composable
 fun DayCell(
     date: LocalDate,
     isSelected: Boolean,
     isToday: Boolean,
+    dayColor: Color,
     onClick: () -> Unit
 ) {
     Box(
@@ -107,73 +173,8 @@ fun DayCell(
     ) {
         Text(
             text = "${date.dayOfMonth}",
-            color = if (isSelected) Color.White else Color.Black
+            color = if (isSelected) Color.White else dayColor
         )
-    }
-}
-
-
-//미리보기
-@Preview(showBackground = true)
-@Composable
-fun DayCellPreview() {
-    ComposeExampleTheme {
-        DayCell(
-            date = LocalDate.now(),  // 미리보기 날짜
-            isSelected = false,      // 선택 여부
-            isToday = true,          // 오늘 여부
-            onClick = {}             // 빈 클릭 이벤트
-        )
-    }
-}
-
-
-//달력
-@Composable
-fun Calendar() {
-    val currentMonth = YearMonth.now()
-    val currentDate = LocalDate.now()
-    var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
-
-    Column(modifier = Modifier.padding(16.dp)) {
-        Text(
-            text = "${currentMonth.year}년 ${currentMonth.monthValue}월",
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
-
-        // 요일 헤더
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-            listOf("일", "월", "화", "수", "목", "금", "토").forEach { day ->
-                Text(text = day, textAlign = TextAlign.Center, modifier = Modifier.weight(1f))
-            }
-        }
-
-        // 날짜 셀
-        val firstDayOfMonth = currentMonth.atDay(1)
-        val daysInMonth = currentMonth.lengthOfMonth()
-        val startOffset = firstDayOfMonth.dayOfWeek.value % 7
-
-        LazyColumn {
-            items((0 until (daysInMonth + startOffset)).chunked(7)) { week ->
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-                    week.forEach { index ->
-                        val day = index - startOffset + 1
-                        if (day > 0 && day <= daysInMonth) {
-                            val date = currentMonth.atDay(day)
-                            DayCell(
-                                date = date,
-                                isSelected = date == selectedDate,
-                                isToday = date == currentDate,
-                                onClick = { selectedDate = date }
-                            )
-                        } else {
-                            Spacer(modifier = Modifier.weight(1f))
-                        }
-                    }
-                }
-            }
-        }
     }
 }
 
