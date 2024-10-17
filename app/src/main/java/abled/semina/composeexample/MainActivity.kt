@@ -44,7 +44,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ComposeExampleTheme {
-                CalendarScreen(MainViewModel())
+                CalendarScreen()
             }
         }
     }
@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity() {
 
 //달력 구성
 @Composable
-fun CalendarScreen(viewModel: MainViewModel) {
+fun CalendarScreen(viewModel: MainViewModel = viewModel()) {
     val currentMonth by viewModel.currentMonth.collectAsState()
     val currentDate = LocalDate.now()
     var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
@@ -97,13 +97,16 @@ fun CalendarScreen(viewModel: MainViewModel) {
         val firstDayOfMonth = currentMonth.atDay(1)
         val daysInMonth = currentMonth.lengthOfMonth()
         val startOffset = firstDayOfMonth.dayOfWeek.value % 7
+        val totalCells = daysInMonth + startOffset
+        val rows = (totalCells + 6) / 7 // 전체 셀을 7로 나누어 행 수 계산
 
         LazyColumn {
-            items((0 until (daysInMonth + startOffset)).chunked(7)) { week ->
+            items(rows) { rowIndex ->
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-                    week.forEach { index ->
-                        val day = index - startOffset + 1
-                        if (day > 0 && day <= daysInMonth) {
+                    for (columnIndex in 0..6) {
+                        val cellIndex = rowIndex * 7 + columnIndex
+                        if (cellIndex >= startOffset && cellIndex < daysInMonth + startOffset) {
+                            val day = cellIndex - startOffset + 1
                             val date = currentMonth.atDay(day)
                             val dayOfWeek = date.dayOfWeek
 
@@ -119,7 +122,8 @@ fun CalendarScreen(viewModel: MainViewModel) {
                                 }
                             )
                         } else {
-                            Spacer(modifier = Modifier.weight(1f))
+                            // 빈 칸 추가
+                            Spacer(modifier = Modifier.size(40.dp))
                         }
                     }
                 }
@@ -128,6 +132,8 @@ fun CalendarScreen(viewModel: MainViewModel) {
     }
 }
 
+
+//달력의 한칸
 @Composable
 fun DayCell(
     date: LocalDate,
@@ -163,7 +169,7 @@ fun DayCell(
 @Composable
 fun CalendarPreview() {
     ComposeExampleTheme {
-        CalendarScreen(MainViewModel())
+        CalendarScreen()
     }
 }
 
