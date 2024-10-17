@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity() {
 
 //달력 구성
 @Composable
-fun CalendarScreen(viewModel: MainViewModel = viewModel()) {
+fun CalendarScreen(viewModel: MainViewModel = MainViewModel()) {
     val currentMonth by viewModel.currentMonth.collectAsState()
     val currentDate = LocalDate.now()
     var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
