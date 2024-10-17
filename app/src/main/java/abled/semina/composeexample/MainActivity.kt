@@ -5,71 +5,38 @@ package abled.semina.composeexample
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import abled.semina.composeexample.ui.theme.ComposeExampleTheme
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.paddingFromBaseline
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Spa
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.unit.dp
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationRail
-import androidx.compose.material3.NavigationRailItem
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.IconButton
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.YearMonth
 
 
 class MainActivity : ComponentActivity() {
@@ -77,25 +44,37 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ComposeExampleTheme {
-
+                CalendarScreen(MainViewModel())
             }
         }
     }
 }
 
 
+//달력 구성
 @Composable
-fun Calendar() {
-    val currentMonth = YearMonth.now()
+fun CalendarScreen(viewModel: MainViewModel) {
+    val currentMonth by viewModel.currentMonth.collectAsState()
     val currentDate = LocalDate.now()
     var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
 
     Column(modifier = Modifier.padding(16.dp)) {
-        Text(
-            text = "${currentMonth.year}년 ${currentMonth.monthValue}월",
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = { viewModel.goToPreviousMonth() }) {
+                Text("<") // 화살표 아이콘으로 대체 가능
+            }
+            Text(
+                text = "${currentMonth.year}년 ${currentMonth.monthValue}월",
+                style = MaterialTheme.typography.titleLarge
+            )
+            IconButton(onClick = { viewModel.goToNextMonth() }) {
+                Text(">") // 화살표 아이콘으로 대체 가능
+            }
+        }
 
         // 요일 헤더
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
@@ -124,7 +103,7 @@ fun Calendar() {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
                     week.forEach { index ->
                         val day = index - startOffset + 1
-                        if (day in 1..daysInMonth) {
+                        if (day > 0 && day <= daysInMonth) {
                             val date = currentMonth.atDay(day)
                             val dayOfWeek = date.dayOfWeek
 
@@ -184,7 +163,7 @@ fun DayCell(
 @Composable
 fun CalendarPreview() {
     ComposeExampleTheme {
-        Calendar()
+        CalendarScreen(MainViewModel())
     }
 }
 
