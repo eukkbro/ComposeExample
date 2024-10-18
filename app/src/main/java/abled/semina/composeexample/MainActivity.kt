@@ -110,6 +110,7 @@ fun CalendarScreen(viewModel: MainViewModel) {
         val rows = (totalCells + 6) / 7 // 전체 셀을 7로 나누어 행 수 계산
 
         //세번째 줄 - 달력의 날짜들
+        // 리사이클러뷰 느낌
         LazyColumn {
             items(rows) { rowIndex ->
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
@@ -144,6 +145,7 @@ fun CalendarScreen(viewModel: MainViewModel) {
 
 
 //달력의 한칸
+//약간 리사이클러뷰의 아이템 뷰 느낌
 @Composable
 fun DayCell(
     date: LocalDate,
@@ -158,11 +160,11 @@ fun DayCell(
             .size(40.dp)
             .background(
                 color = when {
-                    isSelected -> Color.Blue
-                    isToday -> Color.LightGray
-                    else -> Color.Transparent
+                    isSelected -> Color.Blue //선택된 날짜 파랑
+                    isToday -> Color.LightGray //오늘날짜 회색
+                    else -> Color.Transparent // 나머지 투명
                 },
-                shape = CircleShape
+                shape = CircleShape // 백그라운드 원형모양
             )
             .clickable { onClick() }
     ) {
