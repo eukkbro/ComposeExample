@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package abled.semina.composeexample
 
 import android.os.Bundle
@@ -21,9 +19,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.collectAsState
@@ -40,11 +36,17 @@ import java.time.LocalDate
 
 
 class MainActivity : ComponentActivity() {
+
+    lateinit var viewModel: MainViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        viewModel = MainViewModel()
+
         setContent {
             ComposeExampleTheme {
-                CalendarScreen()
+                CalendarScreen(viewModel)
             }
         }
     }
@@ -53,30 +55,37 @@ class MainActivity : ComponentActivity() {
 
 //달력 구성
 @Composable
-fun CalendarScreen(viewModel: MainViewModel = MainViewModel()) {
+fun CalendarScreen(viewModel: MainViewModel) {
+
     val currentMonth by viewModel.currentMonth.collectAsState()
     val currentDate = LocalDate.now()
     var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
 
     Column(modifier = Modifier.padding(16.dp)) {
-        Row(
+
+        Row( //첫번째줄
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            //이전 달 버튼
             IconButton(onClick = { viewModel.goToPreviousMonth() }) {
                 Text("<") // 화살표 아이콘으로 대체 가능
             }
+
+            // 선택된 날짜 표시 칸
             Text(
                 text = "${currentMonth.year}년 ${currentMonth.monthValue}월",
                 style = MaterialTheme.typography.titleLarge
             )
+
+            //이후 달 버튼
             IconButton(onClick = { viewModel.goToNextMonth() }) {
                 Text(">") // 화살표 아이콘으로 대체 가능
             }
         }
 
-        // 요일 헤더
+        // 두번째줄 - 일~토 요일 표시
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
             listOf("일", "월", "화", "수", "목", "금", "토").forEachIndexed { index, day ->
                 val color = when (index) {
@@ -100,6 +109,7 @@ fun CalendarScreen(viewModel: MainViewModel = MainViewModel()) {
         val totalCells = daysInMonth + startOffset
         val rows = (totalCells + 6) / 7 // 전체 셀을 7로 나누어 행 수 계산
 
+        //세번째 줄 - 달력의 날짜들
         LazyColumn {
             items(rows) { rowIndex ->
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
@@ -169,7 +179,7 @@ fun DayCell(
 @Composable
 fun CalendarPreview() {
     ComposeExampleTheme {
-        CalendarScreen()
+        CalendarScreen(MainViewModel())
     }
 }
 
