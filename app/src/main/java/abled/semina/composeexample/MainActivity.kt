@@ -16,8 +16,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CutCornerShape
@@ -188,15 +190,16 @@ fun CalendarPreview() {
 }
 
 
-//일주일 달력 만들기
+//한줄 달력 만들기
 @Composable
-fun WeekCalendar(){
+fun OneLineCalendar(){
 
 }
 
 
+//일간달력 셀
 @Composable
-fun WeekDayCell(date: LocalDate,
+fun OneLineDayCell(date: LocalDate,
                 isSelected: Boolean,
                 isToday: Boolean,
                 dayColor: Color,
@@ -204,7 +207,8 @@ fun WeekDayCell(date: LocalDate,
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
-            .size(80.dp)
+            .width(40.dp)
+            .height(80.dp)
             .background(
                 color = when {
                     isSelected -> Color.Blue //선택된 날짜 파랑
@@ -215,10 +219,13 @@ fun WeekDayCell(date: LocalDate,
             )
             .clickable { onClick() }
     ) {
-        Column(modifier = Modifier) {
+        Column(modifier = Modifier,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally) {
             Text(text = "화",
                 color = if (isSelected) Color.White else dayColor
             )
+            Spacer(modifier = Modifier.height(10.dp))
             Text(
                 text = "${date.dayOfMonth}",
                 color = if (isSelected) Color.White else dayColor
@@ -233,7 +240,7 @@ fun WeekDayCell(date: LocalDate,
 @Composable
 fun WeekCalendarPreview() {
     ComposeExampleTheme {
-        WeekDayCell(LocalDate.now(),true, true, Color.Black, onClick = {})
+        OneLineCalendar()
     }
 }
 
