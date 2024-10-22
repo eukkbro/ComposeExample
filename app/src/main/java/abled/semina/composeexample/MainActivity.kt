@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.collectAsState
@@ -29,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import java.time.DayOfWeek
@@ -182,6 +184,56 @@ fun DayCell(
 fun CalendarPreview() {
     ComposeExampleTheme {
         CalendarScreen(MainViewModel())
+    }
+}
+
+
+//일주일 달력 만들기
+@Composable
+fun WeekCalendar(){
+
+}
+
+
+@Composable
+fun WeekDayCell(date: LocalDate,
+                isSelected: Boolean,
+                isToday: Boolean,
+                dayColor: Color,
+                onClick: () -> Unit){
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .size(80.dp)
+            .background(
+                color = when {
+                    isSelected -> Color.Blue //선택된 날짜 파랑
+                    isToday -> Color.LightGray //오늘날짜 회색
+                    else -> Color.Transparent // 나머지 투명
+                },
+                shape = CutCornerShape(5.dp) // 백그라운드 모서리 둥근모양
+            )
+            .clickable { onClick() }
+    ) {
+        Column(modifier = Modifier) {
+            Text(text = "화",
+                color = if (isSelected) Color.White else dayColor
+            )
+            Text(
+                text = "${date.dayOfMonth}",
+                color = if (isSelected) Color.White else dayColor
+            )
+        }
+    }
+}
+
+
+//일주일달력 미리보기
+@Preview(showBackground = true)
+@Composable
+fun WeekCalendarPreview() {
+    ComposeExampleTheme {
+        WeekDayCell(LocalDate.now(),true, true, Color.Black, onClick = {})
     }
 }
 
