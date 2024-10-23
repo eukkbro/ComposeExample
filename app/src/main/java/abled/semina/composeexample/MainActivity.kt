@@ -11,6 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import abled.semina.composeexample.ui.theme.ComposeExampleTheme
 import android.annotation.SuppressLint
+import android.graphics.Paint.Align
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -30,6 +32,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.EditCalendar
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -57,6 +61,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.constraintlayout.widget.ConstraintLayout
 import java.time.DayOfWeek
 import java.time.LocalDate
 
@@ -291,11 +296,31 @@ fun CalendarDialog(
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun ToolbarWithTitle(name: String) {
+fun MainScreen(name: String, viewModel: MainViewModel) {
+
+    var showDialog by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = name) }
+                title = {
+                    Box(
+                        modifier = Modifier.fillMaxWidth(), // Box로 전체 공간 차지
+                        contentAlignment = Alignment.Center // 제목을 중앙 정렬
+                    ) {
+                        Text(text = name, textAlign = TextAlign.Center)
+                    }
+                },
+                navigationIcon = {
+                    IconButton(
+                        onClick = { showDialog = true }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.CalendarMonth, //아이콘
+                            contentDescription = "캘린더" //아이콘 설명
+                        )
+                    }
+                }
             )
         },
         content = {
@@ -305,6 +330,20 @@ fun ToolbarWithTitle(name: String) {
             }
         }
     )
+
+    // 다이얼로그 표시
+    if (showDialog) {
+        CalendarDialog(
+            viewModel = viewModel,
+            onDismiss = { showDialog = false }, // 다이얼로그 닫기
+            onDateSelected = { date ->
+                // 선택된 날짜 처리
+                println("선택된 날짜: $date")
+                showDialog = false // 날짜 선택 후 다이얼로그 닫기
+            }
+        )
+    }
+
 }
 
 
@@ -313,7 +352,7 @@ fun ToolbarWithTitle(name: String) {
 @Composable
 fun TopAppBarPreview() {
     ComposeExampleTheme {
-        ToolbarWithTitle("xxxx년 xx월 xx일")
+        MainScreen("xxxx년 xx월 xx일", MainViewModel())
     }
 }
 
