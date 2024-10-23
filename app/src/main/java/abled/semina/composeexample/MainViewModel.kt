@@ -20,5 +20,4 @@ class MainViewModel : ViewModel() {
         _currentMonth.value = _currentMonth.value.plusMonths(1)
     }
 
-
 }
