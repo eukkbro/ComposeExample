@@ -230,9 +230,10 @@ fun OneLineCalendar(
 ) {
     // 무한 스크롤이므로 첫 시작점을 임의의 값으로 설정 (예: 1000일 전후로 설정)
     val startOffset = 1000
-    
+
+    //왼쪽이 이전날짜가 오도록 리스트 뒤집기
     val infiniteDates = (startOffset downTo -startOffset).map { offset ->
-        today.plusDays(offset.toLong())
+        today.minusDays(offset.toLong())
     }
 
     //LazyRow의 초기 스크롤 상태(4번째 아이템이 오는 날짜)
