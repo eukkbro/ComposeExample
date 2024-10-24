@@ -19,6 +19,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
@@ -29,6 +30,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material.icons.Icons
@@ -219,8 +222,32 @@ fun CalendarPreview() {
 
 //한줄 달력 만들기
 @Composable
-fun OneLineCalendar(){
+fun InfiniteScrollableCalendar(
+    selectedDate: LocalDate,
+    today: LocalDate,
+    onDateSelected: (LocalDate) -> Unit
+) {
+    // 무한 스크롤이므로 첫 시작점을 임의의 값으로 설정 (예: 1000일 전후로 설정)
+    val startOffset = 1000
+    val infiniteDates = (startOffset downTo -startOffset).map { offset ->
+        today.plusDays(offset.toLong())
+    }
 
+    LazyRow(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp), // 각 날짜 셀 사이 간격
+        contentPadding = PaddingValues(horizontal = 16.dp) // 좌우 여백
+    ) {
+        itemsIndexed(infiniteDates) { _, date ->
+            OneLineDayCell(
+                date = date,
+                isSelected = date == selectedDate,
+                isToday = date == today,
+                dayColor = if (date.dayOfWeek == DayOfWeek.SUNDAY) Color.Red else Color.Black,
+                onClick = { onDateSelected(date) }
+            )
+        }
+    }
 }
 
 
@@ -267,7 +294,7 @@ fun OneLineDayCell(date: LocalDate,
 @Composable
 fun WeekCalendarPreview() {
     ComposeExampleTheme {
-        OneLineCalendar()
+        InfiniteScrollableCalendar(LocalDate.now(), LocalDate.now(),{})
     }
 }
 
