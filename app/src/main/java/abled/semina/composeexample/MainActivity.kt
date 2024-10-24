@@ -32,6 +32,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material.icons.Icons
@@ -222,16 +223,20 @@ fun CalendarPreview() {
 
 //한줄 달력 만들기
 @Composable
-fun InfiniteScrollableCalendar(
+fun OneLineCalendar(
     selectedDate: LocalDate,
     today: LocalDate,
     onDateSelected: (LocalDate) -> Unit
 ) {
     // 무한 스크롤이므로 첫 시작점을 임의의 값으로 설정 (예: 1000일 전후로 설정)
     val startOffset = 1000
+    
     val infiniteDates = (startOffset downTo -startOffset).map { offset ->
         today.plusDays(offset.toLong())
     }
+
+    //LazyRow의 초기 스크롤 상태(4번째 아이템이 오는 날짜)
+    val lazyListState = rememberLazyListState(initialFirstVisibleItemIndex = startOffset - 3)
 
     LazyRow(
         modifier = Modifier.fillMaxWidth(),
@@ -243,7 +248,11 @@ fun InfiniteScrollableCalendar(
                 date = date,
                 isSelected = date == selectedDate,
                 isToday = date == today,
-                dayColor = if (date.dayOfWeek == DayOfWeek.SUNDAY) Color.Red else Color.Black,
+                dayColor = when (date.dayOfWeek) {
+                    DayOfWeek.SUNDAY -> Color.Red
+                    DayOfWeek.SATURDAY -> Color.Blue
+                    else -> Color.Black
+                },
                 onClick = { onDateSelected(date) }
             )
         }
@@ -276,7 +285,7 @@ fun OneLineDayCell(date: LocalDate,
         Column(modifier = Modifier,
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = "화",
+            Text(text = "${ date.dayOfWeek } ".substring(0,3),
                 color = if (isSelected) Color.White else dayColor
             )
             Spacer(modifier = Modifier.height(10.dp))
@@ -294,7 +303,7 @@ fun OneLineDayCell(date: LocalDate,
 @Composable
 fun WeekCalendarPreview() {
     ComposeExampleTheme {
-        InfiniteScrollableCalendar(LocalDate.now(), LocalDate.now(),{})
+        OneLineCalendar(LocalDate.now(), LocalDate.now(),{})
     }
 }
 
