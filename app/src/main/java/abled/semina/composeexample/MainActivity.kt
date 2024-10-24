@@ -229,28 +229,24 @@ fun OneLineCalendar(
     onDateSelected: (LocalDate) -> Unit
 ) {
 
-    val startOffset = 10000 // 스크롤 범위를 크게 설정 (10000일 전후)
+    val startOffset = 1000 // 스크롤 범위를 크게 설정 (10000일 전후)
 
     //왼쪽이 이전날짜가 오도록 리스트 뒤집기
-    val infiniteDates = (startOffset downTo -startOffset).map { offset ->
-        today.minusDays(offset.toLong())
-    }
+    val infiniteDates = (-startOffset .. startOffset).map { offset ->
+        today.minusDays(offset.toLong()) // 왼쪽(과거)부터 오른쪽(미래)까지 날짜 나열
+    }.reversed() // 리스트를 반대로 뒤집어서 왼쪽이 과거, 오른쪽이 미래가 되도록
 
-    //LazyRow의 초기 스크롤 상태(4번째 아이템이 오는 날짜)
-    val lazyListState = rememberLazyListState(initialFirstVisibleItemIndex = startOffset - 3)
+    // 오늘 날짜가 리스트의 첫 번째 인덱스에 오도록 설정
+    val todayIndex = infiniteDates.indexOf(today)
+    val lazyListState = rememberLazyListState(initialFirstVisibleItemIndex = todayIndex)
 
     Column(
         modifier = Modifier.fillMaxWidth()
     ){
 
-        Text(
-            text = "${selectedDate.month} ${selectedDate.year}",
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
-        )
-
         LazyRow(
             modifier = Modifier.fillMaxWidth(),
+            state = lazyListState,
             horizontalArrangement = Arrangement.spacedBy(8.dp), // 각 날짜 셀 사이 간격
             contentPadding = PaddingValues(horizontal = 8.dp) // 좌우 여백
         ) {
@@ -341,6 +337,9 @@ fun MainScreen(viewModel: MainViewModel) {
 
     var showDialog by remember { mutableStateOf(false) }
 
+    // selectedDate 상태를 상위에서 관리
+    var selectedDate by remember { mutableStateOf(LocalDate.now()) }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -360,9 +359,17 @@ fun MainScreen(viewModel: MainViewModel) {
         content = {
             paddingValues ->
             Column(modifier = Modifier.padding(paddingValues)){
+                // 선택된 날짜의 년월을 표시
+                Text(
+                    text = "${selectedDate.year}년 ${selectedDate.monthValue}월",
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                )
 
-                // 한줄 달력 들어가야지
-                OneLineCalendar(, ,{})
+                // 한줄 달력에서 날짜 클릭 시 selectedDate 업데이트
+                OneLineCalendar(selectedDate = selectedDate, today = LocalDate.now()) { date ->
+                    selectedDate = date
+                }
             }
         }
     )
