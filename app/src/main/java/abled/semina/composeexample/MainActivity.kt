@@ -228,8 +228,8 @@ fun OneLineCalendar(
     today: LocalDate,
     onDateSelected: (LocalDate) -> Unit
 ) {
-    // 무한 스크롤이므로 첫 시작점을 임의의 값으로 설정 (예: 1000일 전후로 설정)
-    val startOffset = 1000
+
+    val startOffset = 10000 // 스크롤 범위를 크게 설정 (10000일 전후)
 
     //왼쪽이 이전날짜가 오도록 리스트 뒤집기
     val infiniteDates = (startOffset downTo -startOffset).map { offset ->
@@ -239,25 +239,37 @@ fun OneLineCalendar(
     //LazyRow의 초기 스크롤 상태(4번째 아이템이 오는 날짜)
     val lazyListState = rememberLazyListState(initialFirstVisibleItemIndex = startOffset - 3)
 
-    LazyRow(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp), // 각 날짜 셀 사이 간격
-        contentPadding = PaddingValues(horizontal = 16.dp) // 좌우 여백
-    ) {
-        itemsIndexed(infiniteDates) { _, date ->
-            OneLineDayCell(
-                date = date,
-                isSelected = date == selectedDate,
-                isToday = date == today,
-                dayColor = when (date.dayOfWeek) {
-                    DayOfWeek.SUNDAY -> Color.Red
-                    DayOfWeek.SATURDAY -> Color.Blue
-                    else -> Color.Black
-                },
-                onClick = { onDateSelected(date) }
-            )
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ){
+
+        Text(
+            text = "${selectedDate.month} ${selectedDate.year}",
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
+        )
+
+        LazyRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp), // 각 날짜 셀 사이 간격
+            contentPadding = PaddingValues(horizontal = 8.dp) // 좌우 여백
+        ) {
+            itemsIndexed(infiniteDates) { _, date ->
+                OneLineDayCell(
+                    date = date,
+                    isSelected = date == selectedDate,
+                    isToday = date == today,
+                    dayColor = when (date.dayOfWeek) {
+                        DayOfWeek.SUNDAY -> Color.Red
+                        DayOfWeek.SATURDAY -> Color.Blue
+                        else -> Color.Black
+                    },
+                    onClick = { onDateSelected(date) }
+                )
+            }
         }
     }
+
 }
 
 
@@ -299,14 +311,6 @@ fun OneLineDayCell(date: LocalDate,
 }
 
 
-//일주일달력 미리보기
-@Preview(showBackground = true)
-@Composable
-fun WeekCalendarPreview() {
-    ComposeExampleTheme {
-        OneLineCalendar(LocalDate.now(), LocalDate.now(),{})
-    }
-}
 
 //달력 다이얼로그
 @Composable
@@ -333,21 +337,14 @@ fun CalendarDialog(
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainScreen(name: String, viewModel: MainViewModel) {
+fun MainScreen(viewModel: MainViewModel) {
 
     var showDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {
-                    Box(
-                        modifier = Modifier.fillMaxWidth(), // Box로 전체 공간 차지
-                        contentAlignment = Alignment.Center // 제목을 중앙 정렬
-                    ) {
-                        Text(text = name, textAlign = TextAlign.Center)
-                    }
-                },
+                title = {},
                 navigationIcon = {
                     IconButton(
                         onClick = { showDialog = true }
@@ -363,7 +360,9 @@ fun MainScreen(name: String, viewModel: MainViewModel) {
         content = {
             paddingValues ->
             Column(modifier = Modifier.padding(paddingValues)){
-                Text(text = "일간 달력 들어갈 예정")
+
+                // 한줄 달력 들어가야지
+                OneLineCalendar(, ,{})
             }
         }
     )
@@ -389,7 +388,7 @@ fun MainScreen(name: String, viewModel: MainViewModel) {
 @Composable
 fun TopAppBarPreview() {
     ComposeExampleTheme {
-        MainScreen("xxxx년 xx월 xx일", MainViewModel())
+        MainScreen(MainViewModel())
     }
 }
 
