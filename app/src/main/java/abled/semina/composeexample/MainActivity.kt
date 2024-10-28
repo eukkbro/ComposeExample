@@ -66,6 +66,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import java.time.DayOfWeek
 import java.time.LocalDate
 
@@ -83,6 +87,9 @@ class MainActivity : ComponentActivity() {
             ComposeExampleTheme {
                 Calendar(viewModel)
             }
+
+            val navController = rememberNavController()
+            AppNavHost(navController = navController)
         }
     }
 }
@@ -211,6 +218,17 @@ fun DayCell(
 }
 
 
+//네비
+@Composable
+fun AppNavHost(navController: NavHostController) {
+    NavHost(navController, startDestination = "home") {
+        composable("home") { MainScreen(navController) }
+        composable("detail") { DetailScreen() }
+    }
+}
+
+
+
 //달력 미리보기
 @Preview(showBackground = true)
 @Composable
@@ -315,9 +333,6 @@ fun CalendarDialog(
     onDismiss: () -> Unit,
     onDateSelected: (LocalDate) -> Unit
 ){
-    val currentMonth by viewModel.currentMonth.collectAsState()
-    val currentDate = LocalDate.now()
-    var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -333,12 +348,15 @@ fun CalendarDialog(
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainScreen(viewModel: MainViewModel) {
+fun MainScreen(navController: NavHostController, viewModel: MainViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
 
     var showDialog by remember { mutableStateOf(false) }
 
     // selectedDate 상태를 상위에서 관리
     var selectedDate by remember { mutableStateOf(LocalDate.now()) }
+
+    //비동기 처리 변수
+    val uiState by viewModel.uiState.collectAsState()
 
     Scaffold(
         topBar = {
@@ -370,6 +388,12 @@ fun MainScreen(viewModel: MainViewModel) {
                 OneLineCalendar(selectedDate = selectedDate, today = LocalDate.now()) { date ->
                     selectedDate = date
                 }
+
+                //비동기 처리상태
+                Text(text = uiState)
+                Button(onClick = {navController.navigate("detail")}) {
+                    Text(text = "상세 화면으로 이동")
+                }
             }
         }
     )
@@ -387,15 +411,29 @@ fun MainScreen(viewModel: MainViewModel) {
         )
     }
 
-}
+} //MainScreen()
+
+
+// 자세히 보기 화면
+@Composable
+fun DetailScreen() {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text("상세 화면입니다.")
+    }
+} // DetailScreen()
 
 
 //상단바 미리보기
 @Preview(showBackground = true)
 @Composable
-fun TopAppBarPreview() {
+fun AppPreview() {
     ComposeExampleTheme {
-        MainScreen(MainViewModel())
+        val naviController = rememberNavController()
+        AppNavHost(navController = naviController)
     }
 }
 

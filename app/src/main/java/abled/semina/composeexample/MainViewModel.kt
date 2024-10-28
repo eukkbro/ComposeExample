@@ -21,7 +21,7 @@ class MainViewModel : ViewModel() {
         fetchData() // 데이터 비동기 요청
     }
 
-    // 비동기 작업 (예: 네트워크 요청)
+    // 비동기 작업 (예: 네트워크 요청할수도)
     private fun fetchData() {
         viewModelScope.launch {
             // 예시: 비동기 작업 처리 후 상태 업데이트
