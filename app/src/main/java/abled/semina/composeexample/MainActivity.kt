@@ -88,9 +88,9 @@ class MainActivity : ComponentActivity() {
 
             ComposeExampleTheme {
 
-                //네비컨트롤러 초기화
+                //네비 컨트롤러 초기화
                 val navController = rememberNavController()
-                AppNavHost(navController = navController)
+                AppNavHost(navController = navController, viewModel = viewModel)
 
             }
 
@@ -99,8 +99,6 @@ class MainActivity : ComponentActivity() {
     }
 
 }
-
-
 
 
 
@@ -227,11 +225,12 @@ fun DayCell(
 }
 
 
-//네비
+//네비게이션 설정
 @Composable
-fun AppNavHost(navController: NavHostController) {
-    NavHost(navController, startDestination = "home") {
-        composable("home") { MainScreen(navController) }
+fun AppNavHost(navController: NavHostController, viewModel: MainViewModel) {
+    NavHost(navController = navController, startDestination = "home") {
+
+        composable("home") { MainScreen(navController, viewModel) }
         composable("detail") { DetailScreen() }
     }
 }
@@ -346,7 +345,7 @@ fun CalendarDialog(
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainScreen(navController: NavHostController, viewModel: MainViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+fun MainScreen(navController: NavHostController, viewModel: MainViewModel) {
 
     var showDialog by remember { mutableStateOf(false) }
 
@@ -439,10 +438,13 @@ fun DetailScreen() {
 @Composable
 fun AppPreview() {
     ComposeExampleTheme {
-        val naviController = rememberNavController()
-        AppNavHost(navController = naviController)
 
-        MainScreen(naviController, MainViewModel())
+        val viewModel = MainViewModel()
+
+        val naviController = rememberNavController()
+        AppNavHost(navController = naviController, viewModel = viewModel)
+
+        MainScreen(naviController, viewModel)
     }
 }
 
