@@ -82,34 +82,21 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        viewModel = MainViewModel()
 
         setContent {
-            setVariables()
-
-            //네비컨트롤러 초기화
-            val navController = rememberNavController()
-            AppNavHost(navController = navController)
 
             ComposeExampleTheme {
 
-                //메인화면
-                MainScreen(navController = navController, viewModel = viewModel)
+                //네비컨트롤러 초기화
+                val navController = rememberNavController()
+                AppNavHost(navController = navController)
 
             }
 
 
         }
     }
-
-
-
-    //변수 초기화
-    private fun setVariables(){
-
-        //뷰모델 초기화
-        viewModel = MainViewModel()
-
-    } // setReference()
 
 }
 
@@ -246,17 +233,6 @@ fun AppNavHost(navController: NavHostController) {
     NavHost(navController, startDestination = "home") {
         composable("home") { MainScreen(navController) }
         composable("detail") { DetailScreen() }
-    }
-}
-
-
-
-//달력 미리보기
-@Preview(showBackground = true)
-@Composable
-fun CalendarPreview() {
-    ComposeExampleTheme {
-        Calendar(MainViewModel())
     }
 }
 
@@ -413,8 +389,17 @@ fun MainScreen(navController: NavHostController, viewModel: MainViewModel = andr
 
                 //비동기 처리상태
                 Text(text = uiState)
-                Button(onClick = {navController.navigate("detail")}) {
+
+                //화면이동 버튼
+                Button(
+                onClick = {
+                    navController.navigate("detail")
+                    Log.d("TAG", "MainScreen: 상세화면으로 이동 클릭")
+                }
+                ) {
+
                     Text(text = "상세 화면으로 이동")
+
                 }
             }
         }
