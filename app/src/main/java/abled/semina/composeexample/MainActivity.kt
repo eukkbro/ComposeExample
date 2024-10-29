@@ -76,23 +76,45 @@ import java.time.LocalDate
 
 class MainActivity : ComponentActivity() {
 
+    //뷰모델 늦은 초기화
     lateinit var viewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel = MainViewModel()
 
         setContent {
-            ComposeExampleTheme {
-                Calendar(viewModel)
-            }
+            setVariables()
 
+            //네비컨트롤러 초기화
             val navController = rememberNavController()
             AppNavHost(navController = navController)
+
+            ComposeExampleTheme {
+
+                //메인화면
+                MainScreen(navController = navController, viewModel = viewModel)
+
+            }
+
+
         }
     }
+
+
+
+    //변수 초기화
+    private fun setVariables(){
+
+        //뷰모델 초기화
+        viewModel = MainViewModel()
+
+    } // setReference()
+
 }
+
+
+
 
 
 //달력 구성
@@ -434,6 +456,8 @@ fun AppPreview() {
     ComposeExampleTheme {
         val naviController = rememberNavController()
         AppNavHost(navController = naviController)
+
+        MainScreen(naviController, MainViewModel())
     }
 }
 
